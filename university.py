@@ -1,16 +1,17 @@
 class Department:
 
-    def __init__(self, n):
+    def __init__(self, n, score_idx):
         self.accepted_students = []
         self.num_of_free_places = n
+        self.score_idx = score_idx
 
     def add_student(self, student):
         self.accepted_students.append(student)
 
     def show_accepted(self):
-        self.accepted_students.sort(key=lambda x: (-float(x[2]), x[0]))
+        self.accepted_students.sort(key=lambda x: (-float(x[self.score_idx]), x[0]))
         for student in self.accepted_students:
-            print(" ".join(student[:3]))
+            print(" ".join(student[:2]), student[self.score_idx])
 
     def __add__(self, other):
         self.num_of_free_places += other
@@ -21,10 +22,10 @@ class Department:
 
 def read_from_file():
     list_of_applicants = []
-    file = open("applicants.txt", "r")
+    file = open("applicant_list_5.txt", "r")
     for line in file:
         list_of_applicants.append(line.split())
-    list_of_applicants.sort(key=lambda x: (-float(x[2]), x[0]))
+    # list_of_applicants.sort(key=lambda x: (-float(x[2]), x[0]))
     return list_of_applicants
 
 
@@ -44,18 +45,21 @@ def choose_best_candidates(list_of_candidates, depart, obj, department_idx):
 def main():
     n = int(input())  # max number of students for each department
     list_of_applicants = read_from_file()
-    departments_dict = {"Biotech": Department(n), "Chemistry": Department(n), "Engineering": Department(n),
-                        "Mathematics": Department(n), "Physics": Department(n)}
+    departments_dict = {"Biotech": Department(n, 3), "Chemistry": Department(n, 3), "Engineering": Department(n, 5),
+                        "Mathematics": Department(n, 4), "Physics": Department(n, 2)}
     for department, obj in departments_dict.items():
-        accepted = choose_best_candidates(list_of_applicants, department, obj, 3)
+        list_of_applicants.sort(key=lambda x: (-float(x[obj.score_idx]), x[0]))
+        accepted = choose_best_candidates(list_of_applicants, department, obj, 6)
         for student in accepted:
             obj.add_student(student)
     for department, obj in departments_dict.items():
-        accepted = choose_best_candidates(list_of_applicants, department, obj, 4)
+        list_of_applicants.sort(key=lambda x: (-float(x[obj.score_idx]), x[0]))
+        accepted = choose_best_candidates(list_of_applicants, department, obj, 7)
         for student in accepted:
             obj.add_student(student)
     for department, obj in departments_dict.items():
-        accepted = choose_best_candidates(list_of_applicants, department, obj, 5)
+        list_of_applicants.sort(key=lambda x: (-float(x[obj.score_idx]), x[0]))
+        accepted = choose_best_candidates(list_of_applicants, department, obj, 8)
         for student in accepted:
             obj.add_student(student)
     for department, obj in departments_dict.items():
