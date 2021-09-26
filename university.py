@@ -47,9 +47,12 @@ class Department:
 
 class Candidate:
 
-    def __init__(self, first_name, last_name):
-        self.results = {"physics": 0.0, "chemistry": 0.0, "math": 0.0, "computer_science": 0.0, "special_exam": 0.0}
-        self.recruitment_departments = {"first_priority": "", "second_priority": "", "third_priority": ""}
+    def __init__(self, first_name, last_name, results_list, candidate_priorities):
+        self.subjects = ["physics", "chemistry", "math", "computer_science", "special_exam"]
+        results_list = [float(result) for result in results_list]
+        self.results = dict(zip(self.subjects, results_list))
+        self.priorities = ["first_priority", "second_priority", "third_priority"]
+        self.recruitment_departments = dict(zip(self.priorities, candidate_priorities))
         self.first_name = first_name
         self.last_name = last_name
 
@@ -65,14 +68,7 @@ class Candidate:
 
 def create_applicant(line_from_file):
     applicants_lst = line_from_file.split()
-    applicant_obj = Candidate(applicants_lst[0], applicants_lst[1])
-    idx = 2
-    for subject in applicant_obj.results.keys():
-        applicant_obj.add_result(subject, float(applicants_lst[idx]))
-        idx += 1
-    for priority in applicant_obj.recruitment_departments.keys():
-        applicant_obj.add_recruitment_department(priority, applicants_lst[idx])
-        idx += 1
+    applicant_obj = Candidate(applicants_lst[0], applicants_lst[1], applicants_lst[2:7], applicants_lst[7:])
     applicant_obj.calculate_result("computer_science", "math")
     applicant_obj.calculate_result("physics", "math")
     applicant_obj.calculate_result("chemistry", "physics")
